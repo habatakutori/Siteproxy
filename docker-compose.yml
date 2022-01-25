@@ -31,14 +31,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        - SERVER_NAME=site.example.com # Replace with your domain. This ENV set arg for config.js
     environment: 
       - VIRTUAL_HOST=site.exmple.com # Replace with your domain
       - VIRTUAL_PORT=8011 # siteproxy's port
       - LETSENCRYPT_HOST=site.example.com # If you don't want to set SSL certificate, you can comment out this and next line
       - LETSENCRYPT_EMAIL=mail@example.com
       - VIRTUAL_NETWORK=site-proxy
-    args:
-      - SERVERNAME=site.example.com # Replace with your domain. This ENV set arg for config.js
     networks:
       - shared
       
