@@ -36,8 +36,9 @@ services:
       - VIRTUAL_PORT=8011 # siteproxy's port
       - LETSENCRYPT_HOST=site.example.com # If you don't want to set SSL certificate, you can comment out this and next line
       - LETSENCRYPT_EMAIL=mail@example.com
-      - SERVERNAME=site.example.com # Replace with your domain. This ENV set arg for config.js
       - VIRTUAL_NETWORK=site-proxy
+    args:
+      - SERVERNAME=site.example.com # Replace with your domain. This ENV set arg for config.js
     networks:
       - shared
       
