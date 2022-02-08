@@ -1,0 +1,48 @@
+version: "2"
+services:
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./certs:/etc/nginx/certs:ro
+      - /etc/nginx/vhost.d
+      - /usr/share/nginx/html
+    restart: always
+    networks:
+      - shared
+
+  letsencrypt:
+    image: nginxproxy/acme-companion
+    container_name: letsencrypt
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./certs:/etc/nginx/certs:rw
+    volumes_from:
+      - nginx-proxy
+    restart: always
+    networks:
+      - shared
+  
+  siteproxy:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - SERVER_NAME=site.example.com # Replace with your domain. This ENV set arg for config.js
+    environment: 
+      - VIRTUAL_HOST=site.exmple.com # Replace with your domain
+      - VIRTUAL_PORT=8011 # siteproxy's port
+      - LETSENCRYPT_HOST=site.example.com # If you don't want to set SSL certificate, you can comment out this and next line
+      - LETSENCRYPT_EMAIL=mail@example.com
+      - VIRTUAL_NETWORK=site-proxy
+    networks:
+      - shared
+      
+networks:
+  shared:
+    external: 
+      name: site-proxy
