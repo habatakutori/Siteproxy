@@ -1,1 +1,1 @@
-web: herokuAddr=bing02.herokuapp.com npm run start
+web: herokuAddr=tohyotalk.herokuapp.com npm run start
